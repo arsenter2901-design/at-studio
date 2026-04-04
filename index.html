@@ -78,6 +78,17 @@
         .card h3 { font-size: 1.5rem; margin-bottom: 15px; color: #fff; }
         .card p { color: #a0a0a0; line-height: 1.6; }
 
+        /* ДОДАНІ СТИЛІ СЕКЦІЇ ЗАМОВЛЕННЯ */
+        .order-wrapper { display: flex; flex-wrap: wrap; gap: 30px; max-width: 1200px; margin: 0 auto; justify-content: center; }
+        .order-card-bot { flex: 1; min-width: 320px; background: linear-gradient(145deg, rgba(157, 78, 221, 0.1), rgba(0, 243, 255, 0.05)); padding: 40px; border-radius: 24px; border: 1px solid var(--neon-purple); text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+        .order-card-form { flex: 1.5; min-width: 320px; background: var(--glass-bg); padding: 40px; border-radius: 24px; border: 1px solid var(--glass-border); backdrop-filter: blur(10px); text-align: left; }
+        .form-group { margin-bottom: 20px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        label { display: block; color: #888; font-size: 0.85rem; margin-bottom: 8px; margin-left: 5px; }
+        input, textarea, select { width: 100%; padding: 14px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 10px; color: white; outline: none; transition: 0.3s; font-size: 1rem; margin-top: 5px; }
+        input:focus, textarea:focus, select:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 243, 255, 0.1); background: rgba(0,0,0,0.5); }
+        select option { background: var(--bg-color); color: #fff; }
+
         .interactive-3d { padding: 80px 20px; text-align: center; border-top: 1px solid var(--glass-border); opacity: 0; }
         model-viewer { width: 100%; height: 500px; max-width: 900px; margin: 0 auto; }
 
@@ -95,6 +106,9 @@
             .hero h1 { font-size: 2.8rem; }
             .hero-buttons { flex-direction: column; width: 100%; max-width: 300px; }
             nav { padding: 15px 20px; }
+            /* Адаптація форми */
+            .form-row { grid-template-columns: 1fr; gap: 0; }
+            .order-wrapper { flex-direction: column; }
         }
     </style>
 </head>
@@ -104,7 +118,7 @@
         <a href="#" class="logo">AT Studio<span>.3d</span></a>
         <div class="nav-links">
             <a href="https://atstudio3d.aima.site/" target="_blank" class="btn btn-shop" style="padding: 10px 20px;">МАГАЗИН</a>
-            <a href="contact.html" class="btn btn-main" style="padding: 10px 20px;">КОНТАКТИ</a>
+            <a href="#order-section" class="btn btn-main" style="padding: 10px 20px;">ЗАМОВИТИ</a>
         </div>
     </nav>
 
@@ -116,7 +130,7 @@
         </p>
         <div class="hero-buttons">
             <a href="https://atstudio3d.aima.site/" target="_blank" class="btn btn-shop">🛍️ ІНТЕРНЕТ МАГАЗИН</a>
-            <a href="contact.html" class="btn btn-main"> ЗАМОВИТИ</a>
+            <a href="#order-section" class="btn btn-main"> ЗАМОВИТИ</a>
         </div>
     </section>
 
@@ -168,10 +182,67 @@
         </div>
     </section>
 
+    <section id="order-section" class="anim-item" style="padding: 100px 5%; border-top: 1px solid var(--glass-border); background: rgba(157, 78, 221, 0.02); text-align: center;">
+        <h2 style="font-size: 2.5rem; margin-bottom: 20px; color: #fff;">Готові до старту?</h2>
+        <p style="color: #a0a0a0; margin-bottom: 60px; font-size: 1.1rem;">Оберіть найзручніший для вас спосіб оформлення замовлення</p>
+
+        <div class="order-wrapper">
+            <div class="order-card-bot">
+                <div>
+                    <i class="fa-brands fa-telegram" style="font-size: 4rem; color: var(--neon-blue); margin-bottom: 20px;"></i>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 15px; color: #fff;">Telegram Бот</h3>
+                    <p style="color: #ccc; line-height: 1.6; margin-bottom: 30px;">
+                        Миттєвий зв'язок! Наш бот допоможе швидко сформувати технічне завдання та відправити його майстру напряму в чат.
+                    </p>
+                </div>
+                <a href="https://t.me/at_studio_3d_bot" target="_blank" class="btn btn-shop" style="width: 100%;">
+                    <i class="fa-solid fa-paper-plane" style="margin-right: 8px;"></i> ПЕРЕЙТИ В БОТ
+                </a>
+            </div>
+
+            <div class="order-card-form">
+                <h3 style="font-size: 1.6rem; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; color: #fff;">
+                    <i class="fa-solid fa-envelope-open-text" style="color: var(--neon-blue);"></i> Заявка на сайті
+                </h3>
+
+                <form action="https://formspree.io/f/mnjooadb" method="POST">
+                    <div class="form-row">
+                        <div>
+                            <label>Ваше ім'я</label>
+                            <input type="text" name="name" required placeholder="Арсен">
+                        </div>
+                        <div>
+                            <label>Ваш контакт (TG / Номер телефону)</label>
+                            <input type="text" name="contact" required placeholder="@username">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Що потрібно зробити?</label>
+                        <select name="service">
+                            <option>3D-Друк </option>
+                            <option>Розробка електроніки (Arduino/ESP)</option>
+                            <option>Створення Telegram Бота (Python)</option>
+                            <option>Комплексний проект</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Опис ідеї або ТЗ</label>
+                        <textarea name="message" rows="4" required placeholder="Опишіть завдання, вкажіть розміри деталі або функціонал бота..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-main" style="width: 100%; border-color: var(--neon-blue); color: var(--neon-blue);">
+                        ВІДПРАВИТИ ЗАПИТ
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
     <section class="interactive-3d anim-item">
         <h2>Візуалізація проектів</h2>
         <model-viewer src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" camera-controls auto-rotate shadow-intensity="1"></model-viewer>
-        <a href="contact.html" class="btn btn-main" style="margin-top: 40px; opacity: 1;">ІНДИВІДУАЛЬНЕ ЗАМОВЛЕННЯ</a>
     </section>
 
     <footer>
