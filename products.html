@@ -15,12 +15,13 @@
             --neon-blue: #00f3ff;
             --neon-purple: #9d4edd;
             --glass-bg: rgba(255, 255, 255, 0.02);
-            --glass-border: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; scroll-behavior: smooth; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
 
+        /* ФОН */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at 15% 50%, rgba(0, 243, 255, 0.08), transparent 30%),
@@ -39,184 +40,149 @@
 
         .container { max-width: 1200px; margin: 120px auto 60px; padding: 0 20px; }
         
-        .page-title { font-size: 3rem; margin-bottom: 10px; text-align: center; background: linear-gradient(90deg, #fff, var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .page-subtitle { text-align: center; color: #888; margin-bottom: 50px; }
-
-        /* ФІЛЬТРИ */
-        .filters { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
-        .filter-btn { padding: 10px 25px; border-radius: 30px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: #fff; cursor: pointer; transition: 0.3s; font-weight: 500; }
-        .filter-btn:hover, .filter-btn.active { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); background: rgba(0, 243, 255, 0.1); }
+        .page-title { font-size: 3rem; text-align: center; background: linear-gradient(90deg, #fff, var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 40px; }
 
         /* СІТКА ТОВАРІВ */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
         
         .product-card { 
             background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; 
-            padding: 20px; transition: 0.4s; display: flex; flex-direction: column;
-            animation: fadeIn 0.5s ease forwards;
+            padding: 20px; transition: 0.4s; cursor: pointer; text-align: center;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .product-card:hover { transform: translateY(-10px); border-color: var(--neon-purple); box-shadow: 0 10px 30px rgba(157, 78, 221, 0.2); }
+        .product-card:hover { transform: translateY(-10px); border-color: var(--neon-blue); box-shadow: 0 10px 30px rgba(0, 243, 255, 0.1); }
         
-        .product-img { 
+        .product-img-preview { 
             width: 100%; height: 200px; background: rgba(255,255,255,0.03); 
             border-radius: 15px; margin-bottom: 15px; display: flex; 
             align-items: center; justify-content: center; font-size: 3.5rem; color: var(--neon-blue);
-            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .product-info h3 { font-size: 1.2rem; margin-bottom: 8px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
-        .product-info p { color: #888; font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4; flex-grow: 1; }
+        /* МОДАЛЬНЕ ВІКНО */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
+            align-items: center; justify-content: center; padding: 20px;
+        }
+
+        .modal-content {
+            background: #0a0a0f; border: 1px solid var(--glass-border);
+            width: 100%; max-width: 900px; border-radius: 30px; position: relative;
+            display: flex; flex-direction: row; overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.1);
+        }
+
+        .close-modal {
+            position: absolute; top: 20px; right: 25px; color: #fff; font-size: 30px;
+            cursor: pointer; z-index: 10; transition: 0.3s;
+        }
+        .close-modal:hover { color: var(--neon-blue); }
+
+        .modal-left { flex: 1; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; padding: 40px; border-right: 1px solid var(--glass-border); }
+        .modal-left i { font-size: 8rem; color: var(--neon-blue); text-shadow: 0 0 30px rgba(0, 243, 255, 0.3); }
+
+        .modal-right { flex: 1.2; padding: 60px 40px; display: flex; flex-direction: column; justify-content: center; }
         
-        .product-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 15px; border-top: 1px solid var(--glass-border); }
-        .price { font-size: 1.1rem; font-weight: 700; color: var(--neon-purple); }
-        .price.dev { font-size: 0.85rem; opacity: 0.7; font-style: italic; }
+        .modal-category { color: var(--neon-purple); font-size: 0.9rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        .modal-title { font-size: 2.5rem; color: #fff; margin-bottom: 20px; line-height: 1.1; }
+        .modal-description { color: #aaa; line-height: 1.6; margin-bottom: 30px; font-size: 1.1rem; }
+        
+        .modal-price { font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 30px; display: block; }
+        .modal-price span { color: var(--neon-blue); }
 
-        .btn-buy { 
-            padding: 8px 15px; border-radius: 6px; background: transparent; 
-            color: var(--neon-blue); border: 1px solid var(--neon-blue); text-decoration: none; font-weight: bold; font-size: 0.8rem;
-            transition: 0.3s; 
+        .btn-order {
+            padding: 18px 40px; border-radius: 12px; background: var(--neon-blue);
+            color: #000; text-decoration: none; font-weight: 700; text-align: center;
+            transition: 0.3s; font-size: 1.1rem;
         }
-        .btn-buy:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); }
+        .btn-order:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(0, 243, 255, 0.4); }
 
-        footer { padding: 40px; text-align: center; border-top: 1px solid var(--glass-border); margin-top: 60px; color: #555; font-size: 0.9rem; }
-
-        /* Для приховування карток при фільтрації */
-        .hide { display: none; }
+        /* АДАПТИВНІСТЬ */
+        @media (max-width: 768px) {
+            .modal-content { flex-direction: column; }
+            .modal-left { padding: 40px; border-right: none; border-bottom: 1px solid var(--glass-border); }
+            .modal-right { padding: 30px; }
+            .modal-title { font-size: 1.8rem; }
+        }
     </style>
 </head>
 <body>
 
     <nav>
         <a href="index.html" class="logo">AT Studio<span>.3d</span></a>
-        <a href="index.html" style="color: #888; text-decoration: none; font-size: 0.9rem;"><i class="fa-solid fa-arrow-left"></i> На головну</a>
+        <a href="index.html" style="color: #888; text-decoration: none;"><i class="fa-solid fa-arrow-left"></i> На головну</a>
     </nav>
 
     <div class="container">
-        <h1 class="page-title">Каталог товарів</h1>
-        <p class="page-subtitle">Якісний 3D-друк та технічні рішення</p>
-
-        <div class="filters">
-            <button class="filter-btn active" onclick="filterSelection('all')">Всі товари</button>
-            <button class="filter-btn" onclick="filterSelection('toys')">🧸 Іграшки</button>
-            <button class="filter-btn" onclick="filterSelection('tech')">⚙️ Технічні вироби</button>
-            <button class="filter-btn" onclick="filterSelection('cards')">🪪 Візитки</button>
-        </div>
+        <h1 class="page-title">Каталог</h1>
 
         <div class="products-grid">
-            
-            <div class="product-card toys">
-                <div class="product-img"><i class="fa-solid fa-icons"></i></div>
-                <div class="product-info">
-                    <h3>Магічний конус</h3>
-                    <p>Антистрес-іграшка з плавним ходом. Велика версія.</p>
-                    <div class="product-footer">
-                        <span class="price dev">В розробці</span>
-                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
-                    </div>
-                </div>
+            <div class="product-card" onclick="openModal('Mini Магічний конус', 'Компактна антистрес-іграшка з унікальною геометрією. Друкується високоякісним пластиком PLA. Ідеально підходить для того, щоб зайняти руки під час роботи або навчання.', '5 ₴', 'fa-rug', 'ІГРАШКИ')">
+                <div class="product-img-preview"><i class="fa-solid fa-rug"></i></div>
+                <h3>Mini Конус</h3>
+                <p style="color: var(--neon-blue); margin-top: 10px;">5 ₴</p>
             </div>
 
-            <div class="product-card toys">
-                <div class="product-img"><i class="fa-solid fa-rug"></i></div>
-                <div class="product-info">
-                    <h3>Mini Магічний конус</h3>
-                    <p>Компактна антистрес-іграшка. Завжди під рукою.</p>
-                    <div class="product-footer">
-                        <span class="price">15 ₴</span>
-                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
-                    </div>
-                </div>
+            <div class="product-card" onclick="openModal('Кріплення WAGO 221', 'Технічне кріплення для клемників WAGO серії 221. Доступні версії на 2, 3 та 4 контакти. Забезпечує надійну фіксацію та порядок у розподільчій коробці.', 'В розробці', 'fa-plug', 'ТЕХНІЧНІ ВИРОБИ')">
+                <div class="product-img-preview"><i class="fa-solid fa-plug"></i></div>
+                <h3>Кріплення WAGO</h3>
+                <p style="color: #888; margin-top: 10px;">Детальніше</p>
             </div>
 
-            <div class="product-card tech">
-                <div class="product-img"><i class="fa-solid fa-box-archive"></i></div>
-                <div class="product-info">
-                    <h3>Міні Розподільча коробка</h3>
-                    <p>Для компактного монтажу електроніки або проводки.</p>
-                    <div class="product-footer">
-                        <span class="price dev">В розробці</span>
-                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
-                    </div>
-                </div>
+            <div class="product-card" onclick="openModal('3D Візитки', 'Ексклюзивні візитки з об’ємним текстом та логотипом. Матеріал на вибір. Таку візитку точно не викинуть у смітник!', 'В розробці', 'fa-address-card', 'ВІЗИТКИ')">
+                <div class="product-img-preview"><i class="fa-solid fa-address-card"></i></div>
+                <h3>3D Візитки</h3>
+                <p style="color: #888; margin-top: 10px;">Детальніше</p>
             </div>
-
-            <div class="product-card tech">
-                <div class="product-img"><i class="fa-solid fa-plug"></i></div>
-                <div class="product-info">
-                    <h3>Кріплення WAGO 221 (2)</h3>
-                    <p>Надійний тримач для клемника на 2 контакти.</p>
-                    <div class="product-footer">
-                        <span class="price dev">В розробці</span>
-                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-card tech">
-                <div class="product-img"><i class="fa-solid fa-toggle-on"></i></div>
-                <div class="product-info">
-                    <h3>Кріплення WAGO 221 (3)</h3>
-                    <p>Надійний тримач для клемника на 3 контакти.</p>
-                    <div class="product-footer">
-                        <span class="price dev">В розробці</span>
-                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-card tech">
-                <div class="product-img"><i class="fa-solid fa-microchip"></i></div>
-                <div class="product-info">
-                    <h3>Кріплення WAGO 221 (4)</h3>
-                    <p>Надійний тримач для клемника на 4 контакти.</p>
-                    <div class="product-footer">
-                        <span class="price dev">В розробці</span>
-                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-card cards">
-                <div class="product-img"><i class="fa-solid fa-address-card"></i></div>
-                <div class="product-info">
-                    <h3>Персональні Візитки</h3>
-                    <p>3D-друк візиток з рельєфним текстом або логотипом.</p>
-                    <div class="product-footer">
-                        <span class="price dev">В розробці</span>
-                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 
-    <footer>
-        <p>&copy; 2026 AT Studio.3d | Працюємо над розширенням асортименту</p>
-    </footer>
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            
+            <div class="modal-left" id="modalIconBox">
+                <i class="fa-solid fa-box" id="modalIcon"></i>
+            </div>
+            
+            <div class="modal-right">
+                <span class="modal-category" id="modalCategory">Категорія</span>
+                <h2 class="modal-title" id="modalTitle">Назва товару</h2>
+                <p class="modal-description" id="modalDesc">Опис товару з'явиться тут...</p>
+                <div class="modal-price" id="modalPrice">0 ₴</div>
+                <a href="index.html#order-section" class="btn-order">ЗАМОВИТИ ЗАРАЗ</a>
+            </div>
+        </div>
+    </div>
 
     <script>
-        function filterSelection(c) {
-            var x, i;
-            x = document.getElementsByClassName("product-card");
-            if (c == "all") c = "";
-            for (i = 0; i < x.length; i++) {
-                x[i].classList.add("hide");
-                if (x[i].className.indexOf(c) > -1) {
-                    x[i].classList.remove("hide");
-                }
-            }
+        const modal = document.getElementById("productModal");
+
+        function openModal(title, desc, price, icon, category) {
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("modalDesc").innerText = desc;
+            document.getElementById("modalPrice").innerHTML = `<span>Ціна:</span> ${price}`;
+            document.getElementById("modalCategory").innerText = category;
             
-            // Додавання активного класу кнопці
-            var btns = document.getElementsByClassName("filter-btn");
-            for (var i = 0; i < btns.length; i++) {
-                btns[i].classList.remove("active");
+            // Зміна іконки
+            const iconElement = document.getElementById("modalIcon");
+            iconElement.className = `fa-solid ${icon}`;
+            
+            modal.style.display = "flex";
+            document.body.style.overflow = "hidden"; // Заборона скролу фону
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        // Закриття при кліку поза вікном
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
             }
-            event.currentTarget.classList.add("active");
         }
     </script>
 
 </body>
-</html>
+</html>\
