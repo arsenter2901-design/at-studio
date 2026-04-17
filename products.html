@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Товари | AT Studio.3d</title>
+    <title>Каталог товарів | AT Studio.3d</title>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
@@ -21,7 +21,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; scroll-behavior: smooth; }
         body { background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
 
-        /* ФОН ЯК НА ГОЛОВНІЙ */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at 15% 50%, rgba(0, 243, 255, 0.08), transparent 30%),
@@ -43,113 +42,181 @@
         .page-title { font-size: 3rem; margin-bottom: 10px; text-align: center; background: linear-gradient(90deg, #fff, var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .page-subtitle { text-align: center; color: #888; margin-bottom: 50px; }
 
-        /* КАТЕГОРІЇ (Фільтри) */
+        /* ФІЛЬТРИ */
         .filters { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
-        .filter-btn { padding: 10px 20px; border-radius: 30px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: #fff; cursor: pointer; transition: 0.3s; }
-        .filter-btn:hover, .filter-btn.active { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); }
+        .filter-btn { padding: 10px 25px; border-radius: 30px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: #fff; cursor: pointer; transition: 0.3s; font-weight: 500; }
+        .filter-btn:hover, .filter-btn.active { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); background: rgba(0, 243, 255, 0.1); }
 
         /* СІТКА ТОВАРІВ */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        
         .product-card { 
             background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; 
-            padding: 20px; transition: 0.4s; position: relative; overflow: hidden;
-            display: flex; flex-direction: column;
+            padding: 20px; transition: 0.4s; display: flex; flex-direction: column;
+            animation: fadeIn 0.5s ease forwards;
         }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
         .product-card:hover { transform: translateY(-10px); border-color: var(--neon-purple); box-shadow: 0 10px 30px rgba(157, 78, 221, 0.2); }
         
         .product-img { 
-            width: 100%; height: 220px; background: rgba(255,255,255,0.03); 
+            width: 100%; height: 200px; background: rgba(255,255,255,0.03); 
             border-radius: 15px; margin-bottom: 15px; display: flex; 
-            align-items: center; justify-content: center; font-size: 3rem; color: #444;
-            object-fit: cover;
+            align-items: center; justify-content: center; font-size: 3.5rem; color: var(--neon-blue);
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .product-info h3 { font-size: 1.4rem; margin-bottom: 8px; color: #fff; }
+        .product-info h3 { font-size: 1.2rem; margin-bottom: 8px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
         .product-info p { color: #888; font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4; flex-grow: 1; }
         
-        .product-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-        .price { font-size: 1.3rem; font-weight: 700; color: var(--neon-blue); }
+        .product-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 15px; border-top: 1px solid var(--glass-border); }
+        .price { font-size: 1.1rem; font-weight: 700; color: var(--neon-purple); }
+        .price.dev { font-size: 0.85rem; opacity: 0.7; font-style: italic; }
 
         .btn-buy { 
-            padding: 10px 20px; border-radius: 8px; background: var(--neon-purple); 
-            color: #fff; text-decoration: none; font-weight: bold; font-size: 0.9rem;
+            padding: 8px 15px; border-radius: 6px; background: transparent; 
+            color: var(--neon-blue); border: 1px solid var(--neon-blue); text-decoration: none; font-weight: bold; font-size: 0.8rem;
             transition: 0.3s; 
         }
-        .btn-buy:hover { box-shadow: 0 0 20px rgba(157, 78, 221, 0.5); transform: scale(1.05); }
+        .btn-buy:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); }
 
-        .back-link { display: inline-flex; align-items: center; color: var(--neon-blue); text-decoration: none; margin-bottom: 30px; font-weight: 500; }
-        .back-link i { margin-right: 8px; }
+        footer { padding: 40px; text-align: center; border-top: 1px solid var(--glass-border); margin-top: 60px; color: #555; font-size: 0.9rem; }
 
-        footer { padding: 40px; text-align: center; border-top: 1px solid var(--glass-border); margin-top: 60px; color: #555; }
-
-        @media (max-width: 768px) {
-            .page-title { font-size: 2.2rem; }
-        }
+        /* Для приховування карток при фільтрації */
+        .hide { display: none; }
     </style>
 </head>
 <body>
 
     <nav>
         <a href="index.html" class="logo">AT Studio<span>.3d</span></a>
-        <a href="index.html" style="color: #888; text-decoration: none; font-size: 0.9rem;">← На головну</a>
+        <a href="index.html" style="color: #888; text-decoration: none; font-size: 0.9rem;"><i class="fa-solid fa-arrow-left"></i> На головну</a>
     </nav>
 
     <div class="container">
-        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Повернутися до послуг</a>
-        
         <h1 class="page-title">Каталог товарів</h1>
-        <p class="page-subtitle">Готові рішення, створені за допомогою 3D-друку та програмування</p>
+        <p class="page-subtitle">Якісний 3D-друк та технічні рішення</p>
 
         <div class="filters">
-            <button class="filter-btn active">Всі</button>
-            <button class="filter-btn">3D Моделі</button>
-            <button class="filter-btn">Електроніка</button>
-            <button class="filter-btn">Аксесуари</button>
+            <button class="filter-btn active" onclick="filterSelection('all')">Всі товари</button>
+            <button class="filter-btn" onclick="filterSelection('toys')">🧸 Іграшки</button>
+            <button class="filter-btn" onclick="filterSelection('tech')">⚙️ Технічні вироби</button>
+            <button class="filter-btn" onclick="filterSelection('cards')">🪪 Візитки</button>
         </div>
 
         <div class="products-grid">
-            <div class="product-card">
-                <div class="product-img"><i class="fa-solid fa-headphones"></i></div>
+            
+            <div class="product-card toys">
+                <div class="product-img"><i class="fa-solid fa-icons"></i></div>
                 <div class="product-info">
-                    <h3>Тримач навушників</h3>
-                    <p>Міцний та стильний тримач. Матеріал: PLA+. Колір на вибір.</p>
+                    <h3>Магічний конус</h3>
+                    <p>Антистрес-іграшка з плавним ходом. Велика версія.</p>
                     <div class="product-footer">
-                        <span class="price">350 ₴</span>
-                        <a href="index.html#order-section" class="btn-buy">Замовити</a>
+                        <span class="price dev">В розробці</span>
+                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
                     </div>
                 </div>
             </div>
 
-            <div class="product-card">
-                <div class="product-img"><i class="fa-solid fa-bolt-lightning"></i></div>
+            <div class="product-card toys">
+                <div class="product-img"><i class="fa-solid fa-rug"></i></div>
                 <div class="product-info">
-                    <h3>ESP32 Контролер</h3>
-                    <p>Прошитий модуль для керування розумним домом. Готовий до роботи.</p>
+                    <h3>Mini Магічний конус</h3>
+                    <p>Компактна антистрес-іграшка. Завжди під рукою.</p>
                     <div class="product-footer">
-                        <span class="price">600 ₴</span>
-                        <a href="index.html#order-section" class="btn-buy">Замовити</a>
+                        <span class="price">15 ₴</span>
+                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
                     </div>
                 </div>
             </div>
 
-            <div class="product-card">
-                <div class="product-img"><i class="fa-solid fa-robot"></i></div>
+            <div class="product-card tech">
+                <div class="product-img"><i class="fa-solid fa-box-archive"></i></div>
                 <div class="product-info">
-                    <h3>Міні-бот (Кіт)</h3>
-                    <p>Декоративна фігурка з рухомими частинами. Висока деталізація.</p>
+                    <h3>Міні Розподільча коробка</h3>
+                    <p>Для компактного монтажу електроніки або проводки.</p>
                     <div class="product-footer">
-                        <span class="price">250 ₴</span>
-                        <a href="index.html#order-section" class="btn-buy">Замовити</a>
+                        <span class="price dev">В розробці</span>
+                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
                     </div>
                 </div>
             </div>
 
+            <div class="product-card tech">
+                <div class="product-img"><i class="fa-solid fa-plug"></i></div>
+                <div class="product-info">
+                    <h3>Кріплення WAGO 221 (2)</h3>
+                    <p>Надійний тримач для клемника на 2 контакти.</p>
+                    <div class="product-footer">
+                        <span class="price dev">В розробці</span>
+                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
+                    </div>
+                </div>
             </div>
+
+            <div class="product-card tech">
+                <div class="product-img"><i class="fa-solid fa-toggle-on"></i></div>
+                <div class="product-info">
+                    <h3>Кріплення WAGO 221 (3)</h3>
+                    <p>Надійний тримач для клемника на 3 контакти.</p>
+                    <div class="product-footer">
+                        <span class="price dev">В розробці</span>
+                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card tech">
+                <div class="product-img"><i class="fa-solid fa-microchip"></i></div>
+                <div class="product-info">
+                    <h3>Кріплення WAGO 221 (4)</h3>
+                    <p>Надійний тримач для клемника на 4 контакти.</p>
+                    <div class="product-footer">
+                        <span class="price dev">В розробці</span>
+                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card cards">
+                <div class="product-img"><i class="fa-solid fa-address-card"></i></div>
+                <div class="product-info">
+                    <h3>Персональні Візитки</h3>
+                    <p>3D-друк візиток з рельєфним текстом або логотипом.</p>
+                    <div class="product-footer">
+                        <span class="price dev">В розробці</span>
+                        <a href="index.html#order-section" class="btn-buy">ЗАМОВИТИ</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 AT Studio.3d | Каталог оновлюється щотижня</p>
+        <p>&copy; 2026 AT Studio.3d | Працюємо над розширенням асортименту</p>
     </footer>
+
+    <script>
+        function filterSelection(c) {
+            var x, i;
+            x = document.getElementsByClassName("product-card");
+            if (c == "all") c = "";
+            for (i = 0; i < x.length; i++) {
+                x[i].classList.add("hide");
+                if (x[i].className.indexOf(c) > -1) {
+                    x[i].classList.remove("hide");
+                }
+            }
+            
+            // Додавання активного класу кнопці
+            var btns = document.getElementsByClassName("filter-btn");
+            for (var i = 0; i < btns.length; i++) {
+                btns[i].classList.remove("active");
+            }
+            event.currentTarget.classList.add("active");
+        }
+    </script>
 
 </body>
 </html>
