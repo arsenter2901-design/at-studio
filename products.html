@@ -14,175 +14,308 @@
             --text-color: #e0e0e0;
             --neon-blue: #00f3ff;
             --neon-purple: #9d4edd;
-            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-orange: #ff7e00;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
+        body { background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; min-height: 100vh; }
 
-        /* ФОН */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 15% 50%, rgba(0, 243, 255, 0.08), transparent 30%),
-                        radial-gradient(circle at 85% 30%, rgba(157, 78, 221, 0.08), transparent 30%);
+            background: radial-gradient(circle at 15% 50%, rgba(0, 243, 255, 0.05), transparent 30%),
+                        radial-gradient(circle at 85% 30%, rgba(157, 78, 221, 0.05), transparent 30%);
             z-index: -1;
         }
 
         nav {
-            display: flex; justify-content: space-between; align-items: center; padding: 20px 5%;
-            background: rgba(5, 5, 8, 0.85); backdrop-filter: blur(10px); position: fixed;
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 5%;
+            background: rgba(5, 5, 8, 0.9); backdrop-filter: blur(10px); position: fixed;
             width: 100%; top: 0; z-index: 1000; border-bottom: 1px solid var(--glass-border);
         }
-
-        .logo { font-size: 24px; font-weight: 700; color: #fff; letter-spacing: 1px; text-decoration: none; }
+        .logo { font-size: 22px; font-weight: 700; color: #fff; text-decoration: none; }
         .logo span { color: var(--neon-blue); }
 
-        .container { max-width: 1200px; margin: 120px auto 60px; padding: 0 20px; }
+        .container { max-width: 1200px; margin: 100px auto 60px; padding: 0 20px; }
+
+        /* ФІЛЬТРИ */
+        .filter-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; }
+        .filter-btn { 
+            padding: 10px 20px; border-radius: 30px; border: 1px solid var(--glass-border); 
+            background: var(--glass-bg); color: #fff; cursor: pointer; transition: 0.3s; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .filter-btn:hover, .filter-btn.active { border-color: var(--neon-blue); background: rgba(0, 243, 255, 0.1); }
+
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content {
+            display: none; position: absolute; background: #0f0f15; min-width: 200px;
+            border-radius: 12px; z-index: 10; border: 1px solid var(--glass-border); margin-top: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden;
+        }
+        .dropdown-content.show { display: block; }
+        .dropdown-content button {
+            color: #ccc; padding: 12px 16px; width: 100%; border: none; background: none; 
+            text-align: left; cursor: pointer; transition: 0.2s; font-size: 0.9rem;
+        }
+        .dropdown-content button:hover { color: var(--neon-blue); background: rgba(255,255,255,0.05); }
+
+        /* СІТКА */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
+        .product-card {
+            background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 15px;
+            overflow: hidden; transition: 0.3s ease; display: flex; flex-direction: column;
+        }
+        .product-card:hover { transform: translateY(-8px); border-color: var(--neon-blue); box-shadow: 0 10px 30px rgba(0, 243, 255, 0.1); }
+        .product-card.hidden { display: none; }
+
+        .product-img-box {
+            width: 100%; aspect-ratio: 1 / 1; background: rgba(255,255,255,0.01);
+            overflow: hidden; display: flex; align-items: center; justify-content: center;
+            border-bottom: 1px solid var(--glass-border); cursor: pointer;
+        }
+        .product-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .product-img-box i { font-size: 4rem; color: rgba(255,255,255,0.05); }
+
+        .product-details { padding: 18px; flex-grow: 1; display: flex; flex-direction: column; }
+        .product-cat { font-size: 0.7rem; color: var(--neon-purple); text-transform: uppercase; margin-bottom: 8px; font-weight: 700; }
+        .product-name { font-size: 1rem; font-weight: 500; margin-bottom: 12px; color: #fff; height: 2.6em; overflow: hidden; }
         
-        .page-title { font-size: 3rem; text-align: center; background: linear-gradient(90deg, #fff, var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 40px; }
+        .status-tag { font-size: 0.75rem; color: var(--neon-blue); margin-bottom: 20px; display: flex; align-items: center; gap: 6px; }
+        .status-tag::before { content: ''; width: 6px; height: 6px; background: var(--neon-blue); border-radius: 50%; box-shadow: 0 0 8px var(--neon-blue); }
 
-        /* СІТКА ТОВАРІВ */
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        .product-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+        .price { font-size: 1.2rem; font-weight: 700; color: #fff; }
         
-        .product-card { 
-            background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; 
-            padding: 20px; transition: 0.4s; cursor: pointer; text-align: center;
+        .buy-btn {
+            background: var(--accent-orange); color: #fff; padding: 10px 14px; border-radius: 8px;
+            text-decoration: none; font-size: 0.8rem; font-weight: 700; transition: 0.2s; display: flex; align-items: center; gap: 6px;
         }
-        .product-card:hover { transform: translateY(-10px); border-color: var(--neon-blue); box-shadow: 0 10px 30px rgba(0, 243, 255, 0.1); }
-        
-        .product-img-preview { 
-            width: 100%; height: 200px; background: rgba(255,255,255,0.03); 
-            border-radius: 15px; margin-bottom: 15px; display: flex; 
-            align-items: center; justify-content: center; font-size: 3.5rem; color: var(--neon-blue);
-        }
+        .buy-btn:hover { background: #e67200; transform: scale(1.05); }
 
-        /* МОДАЛЬНЕ ВІКНО */
-        .modal {
-            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
-            align-items: center; justify-content: center; padding: 20px;
-        }
+        /* МОДАЛКА */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: #0a0a0f; border: 1px solid var(--glass-border); width: 100%; max-width: 850px; border-radius: 20px; display: flex; overflow: hidden; position: relative; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #fff; z-index: 10; }
+        .modal-left { flex: 1; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; position: relative; min-height: 400px; }
+        .modal-left img { max-width: 100%; max-height: 400px; object-fit: contain; }
+        .modal-right { flex: 1; padding: 40px; }
 
-        .modal-content {
-            background: #0a0a0f; border: 1px solid var(--glass-border);
-            width: 100%; max-width: 900px; border-radius: 30px; position: relative;
-            display: flex; flex-direction: row; overflow: hidden;
-            box-shadow: 0 0 50px rgba(0, 243, 255, 0.1);
-        }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,243,255,0.1); border: 1px solid var(--neon-blue); color: #fff; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; transition: 0.3s; z-index: 5; }
+        .nav-btn:hover { background: var(--neon-blue); color: #000; }
 
-        .close-modal {
-            position: absolute; top: 20px; right: 25px; color: #fff; font-size: 30px;
-            cursor: pointer; z-index: 10; transition: 0.3s;
-        }
-        .close-modal:hover { color: var(--neon-blue); }
-
-        .modal-left { flex: 1; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; padding: 40px; border-right: 1px solid var(--glass-border); }
-        .modal-left i { font-size: 8rem; color: var(--neon-blue); text-shadow: 0 0 30px rgba(0, 243, 255, 0.3); }
-
-        .modal-right { flex: 1.2; padding: 60px 40px; display: flex; flex-direction: column; justify-content: center; }
-        
-        .modal-category { color: var(--neon-purple); font-size: 0.9rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; display: block; }
-        .modal-title { font-size: 2.5rem; color: #fff; margin-bottom: 20px; line-height: 1.1; }
-        .modal-description { color: #aaa; line-height: 1.6; margin-bottom: 30px; font-size: 1.1rem; }
-        
-        .modal-price { font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 30px; display: block; }
-        .modal-price span { color: var(--neon-blue); }
-
-        .btn-order {
-            padding: 18px 40px; border-radius: 12px; background: var(--neon-blue);
-            color: #000; text-decoration: none; font-weight: 700; text-align: center;
-            transition: 0.3s; font-size: 1.1rem;
-        }
-        .btn-order:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(0, 243, 255, 0.4); }
-
-        /* АДАПТИВНІСТЬ */
-        @media (max-width: 768px) {
-            .modal-content { flex-direction: column; }
-            .modal-left { padding: 40px; border-right: none; border-bottom: 1px solid var(--glass-border); }
-            .modal-right { padding: 30px; }
-            .modal-title { font-size: 1.8rem; }
-        }
+        @media (max-width: 768px) { .modal-content { flex-direction: column; } .modal-left { min-height: 300px; } }
     </style>
 </head>
 <body>
 
     <nav>
         <a href="index.html" class="logo">AT Studio<span>.3d</span></a>
-        <a href="index.html" style="color: #888; text-decoration: none;"><i class="fa-solid fa-arrow-left"></i> На головну</a>
+        <a href="index.html" style="color: #888; text-decoration: none; font-size: 0.9rem;"><i class="fa-solid fa-arrow-left"></i> На головну</a>
     </nav>
 
     <div class="container">
-        <h1 class="page-title">Каталог</h1>
+        <div class="filter-container">
+            <button class="filter-btn active" onclick="filterProducts('all')">Всі товари</button>
+            <div class="dropdown">
+                <button class="filter-btn" id="dropBtn" onclick="toggleDropdown()">
+                    3D ДРУК <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i>
+                </button>
+                <div class="dropdown-content" id="myDropdown">
+                    <button onclick="filterProducts('toys')">🧸 Іграшки</button>
+                    <button onclick="filterProducts('tech')">⚙️ Технічні вироби</button>
+                </div>
+            </div>
+            <button class="filter-btn" id="cardsBtn" onclick="filterProducts('cards')">ВІЗИТКИ</button>
+        </div>
 
         <div class="products-grid">
-            <div class="product-card" onclick="openModal('Mini Магічний конус', 'Компактна антистрес-іграшка з унікальною геометрією. Друкується високоякісним пластиком PLA. Ідеально підходить для того, щоб зайняти руки під час роботи або навчання.', '5 ₴', 'fa-rug', 'ІГРАШКИ')">
-                <div class="product-img-preview"><i class="fa-solid fa-rug"></i></div>
-                <h3>Mini Конус</h3>
-                <p style="color: var(--neon-blue); margin-top: 10px;">5 ₴</p>
+            
+            <div class="product-card toys">
+                <div class="product-img-box" onclick="openModal('Магічний конус-піраміда', 'Заворожуюча оптична ілюзія. Плавний хід та висока якість друку.', '85 ₴', ['img/cone-1.png', 'img/cone-2.png'], 'ІГРАШКИ')">
+                    <img src="img/cone-1.png" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fa-solid fa-vihara\'></i>'">
+                </div>
+                <div class="product-details">
+                    <span class="product-cat">Іграшки</span>
+                    <h3 class="product-name">Магічний конус-піраміда</h3>
+                    <div class="status-tag">В наявності</div>
+                    <div class="product-footer">
+                        <div class="price">85 ₴</div>
+                        <a href="index.html#order" class="buy-btn">Купити</a>
+                    </div>
+                </div>
             </div>
 
-            <div class="product-card" onclick="openModal('Кріплення WAGO 221', 'Технічне кріплення для клемників WAGO серії 221. Доступні версії на 2, 3 та 4 контакти. Забезпечує надійну фіксацію та порядок у розподільчій коробці.', 'В розробці', 'fa-plug', 'ТЕХНІЧНІ ВИРОБИ')">
-                <div class="product-img-preview"><i class="fa-solid fa-plug"></i></div>
-                <h3>Кріплення WAGO</h3>
-                <p style="color: #888; margin-top: 10px;">Детальніше</p>
+            <div class="product-card toys">
+                <div class="product-img-box" onclick="openModal('Mini Магічний конус', 'Компактна версія антистресу. Ідеально для кишені або як брелок.', '15 ₴', 'img/mini-cone.png', 'ІГРАШКИ')">
+                    <img src="img/mini-cone.png" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fa-solid fa-rug\'></i>'">
+                </div>
+                <div class="product-details">
+                    <span class="product-cat">Іграшки</span>
+                    <h3 class="product-name">Mini Магічний конус</h3>
+                    <div class="status-tag">В наявності</div>
+                    <div class="product-footer">
+                        <div class="price">15 ₴</div>
+                        <a href="index.html#order" class="buy-btn">Купити</a>
+                    </div>
+                </div>
             </div>
 
-            <div class="product-card" onclick="openModal('3D Візитки', 'Ексклюзивні візитки з об’ємним текстом та логотипом. Матеріал на вибір. Таку візитку точно не викинуть у смітник!', 'В розробці', 'fa-address-card', 'ВІЗИТКИ')">
-                <div class="product-img-preview"><i class="fa-solid fa-address-card"></i></div>
-                <h3>3D Візитки</h3>
-                <p style="color: #888; margin-top: 10px;">Детальніше</p>
+            <div class="product-card toys">
+                <div class="product-img-box" onclick="openModal('Іграшковий гак-кішка', 'Механічна модель гака з рухомими лопатями. Надійний механізм розкриття.', '35 ₴', 'img/hook.png', 'ІГРАШКИ')">
+                    <img src="img/hook.png" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fa-solid fa-anchor\'></i>'">
+                </div>
+                <div class="product-details">
+                    <span class="product-cat">Іграшки</span>
+                    <h3 class="product-name">Іграшковий гак-кішка</h3>
+                    <div class="status-tag">В наявності</div>
+                    <div class="product-footer">
+                        <div class="price">35 ₴</div>
+                        <a href="index.html#order" class="buy-btn">Купити</a>
+                    </div>
+                </div>
             </div>
+
+            <div class="product-card tech">
+                <div class="product-img-box" onclick="openModal('Міні коробка (2х WAGO 221)', 'Надкомпактний корпус для двох клемників WAGO. Оптимальне рішення для мінімального простору.', '50 ₴', 'img/wago-box-2x.png', 'ТЕХНІКА')">
+                    <img src="img/wago-box-2x.png" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fa-solid fa-box-archive\'></i>'">
+                </div>
+                <div class="product-details">
+                    <span class="product-cat">Технічні вироби</span>
+                    <h3 class="product-name">Міні коробка для 2х WAGO 221</h3>
+                    <div class="status-tag">В наявності</div>
+                    <div class="product-footer">
+                        <div class="price">50 ₴</div>
+                        <a href="index.html#order" class="buy-btn">Купити</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card tech">
+                <div class="product-img-box" onclick="openModal('Mini коробка (3х WAGO 221)', 'Захисний корпус для трьох клемників. Надійний монтаж та ізоляція.', '65 ₴', 'img/wago-box-3x.png', 'ТЕХНІКА')">
+                    <img src="img/wago-box-3x.png" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fa-solid fa-box-archive\'></i>'">
+                </div>
+                <div class="product-details">
+                    <span class="product-cat">Технічні вироби</span>
+                    <h3 class="product-name">Коробка для 3х WAGO 221</h3>
+                    <div class="status-tag">В наявності</div>
+                    <div class="product-footer">
+                        <div class="price">65 ₴</div>
+                        <a href="index.html#order" class="buy-btn">Купити</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card tech">
+                <div class="product-img-box" onclick="openModal('Mini коробка (4х WAGO 221)', 'Професійний корпус для організації чотирьох клемників. Максимальна зручність монтажу.', '80 ₴', ['img/wago-box-1.png', 'img/wago-box-2.png', 'img/wago-box-3.png', 'img/wago-box-4.png'], 'ТЕХНІКА')">
+                    <img src="img/wago-box-1.png" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fa-solid fa-box-archive\'></i>'">
+                </div>
+                <div class="product-details">
+                    <span class="product-cat">Технічні вироби</span>
+                    <h3 class="product-name">Коробка для 4х WAGO 221</h3>
+                    <div class="status-tag">В наявності</div>
+                    <div class="product-footer">
+                        <div class="price">80 ₴</div>
+                        <a href="index.html#order" class="buy-btn">Купити</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card cards">
+                <div class="product-img-box" onclick="openModal('3D Візитки', 'Ексклюзивні візитки з об’ємним текстом та логотипом.', 'За запитом', 'fa-address-card', 'ВІЗИТКИ')">
+                    <i class="fa-solid fa-address-card"></i>
+                </div>
+                <div class="product-details">
+                    <span class="product-cat">Візитки</span>
+                    <h3 class="product-name">Ексклюзивні 3D Візитки</h3>
+                    <div class="status-tag" style="color: #888;">Під замовлення</div>
+                    <div class="product-footer">
+                        <div class="price">-- ₴</div>
+                        <a href="index.html#order" class="buy-btn">Деталі</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <div id="productModal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            
-            <div class="modal-left" id="modalIconBox">
-                <i class="fa-solid fa-box" id="modalIcon"></i>
-            </div>
-            
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="modal-left" id="modalMedia"></div>
             <div class="modal-right">
-                <span class="modal-category" id="modalCategory">Категорія</span>
-                <h2 class="modal-title" id="modalTitle">Назва товару</h2>
-                <p class="modal-description" id="modalDesc">Опис товару з'явиться тут...</p>
-                <div class="modal-price" id="modalPrice">0 ₴</div>
-                <a href="index.html#order-section" class="btn-order">ЗАМОВИТИ ЗАРАЗ</a>
+                <span id="modalCat" style="color:var(--neon-purple); font-weight:bold; font-size:0.8rem;"></span>
+                <h2 id="modalTitle" style="margin: 10px 0 20px 0; color:#fff;"></h2>
+                <div id="modalPrice" style="font-size: 2rem; font-weight:700; color:var(--neon-blue); margin-bottom: 20px;"></div>
+                <p id="modalDesc" style="color: #aaa; margin-bottom: 30px; line-height: 1.6;"></p>
+                <a href="index.html#order" class="buy-btn" style="justify-content: center; padding: 15px; font-size: 1rem;">ЗАМОВИТИ ЗАРАЗ</a>
             </div>
         </div>
     </div>
 
     <script>
-        const modal = document.getElementById("productModal");
+        let currentImages = [];
+        let currentIdx = 0;
 
-        function openModal(title, desc, price, icon, category) {
-            document.getElementById("modalTitle").innerText = title;
-            document.getElementById("modalDesc").innerText = desc;
-            document.getElementById("modalPrice").innerHTML = `<span>Ціна:</span> ${price}`;
-            document.getElementById("modalCategory").innerText = category;
-            
-            // Зміна іконки
-            const iconElement = document.getElementById("modalIcon");
-            iconElement.className = `fa-solid ${icon}`;
-            
-            modal.style.display = "flex";
-            document.body.style.overflow = "hidden"; // Заборона скролу фону
+        function toggleDropdown() {
+            document.getElementById("myDropdown").classList.toggle("show");
         }
 
-        function closeModal() {
-            modal.style.display = "none";
-            document.body.style.overflow = "auto";
-        }
-
-        // Закриття при кліку поза вікном
         window.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
+            if (event.target.id == "productModal") closeModal();
+            if (!event.target.closest('.dropdown')) {
+                document.getElementById("myDropdown").classList.remove('show');
             }
         }
-    </script>
 
+        function filterProducts(cat) {
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                if (cat === 'all' || card.classList.contains(cat)) card.classList.remove('hidden');
+                else card.classList.add('hidden');
+            });
+
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if (cat === 'toys' || cat === 'tech') document.getElementById('dropBtn').classList.add('active');
+            else if (cat === 'cards') document.getElementById('cardsBtn').classList.add('active');
+            else document.querySelector('.filter-btn').classList.add('active');
+        }
+
+        function openModal(title, desc, price, media, category) {
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("modalDesc").innerText = desc;
+            document.getElementById("modalPrice").innerText = price;
+            document.getElementById("modalCat").innerText = category;
+            
+            const mediaBox = document.getElementById("modalMedia");
+            mediaBox.innerHTML = "";
+
+            if (Array.isArray(media)) {
+                currentImages = media; 
+                currentIdx = 0;
+                mediaBox.innerHTML = `
+                    <button class="nav-btn" style="left:10px" onclick="changeImg(-1); event.stopPropagation();">❮</button>
+                    <img id="mImg" src="${media[0]}" onerror="this.src='https://via.placeholder.com/400?text=Зображення'">
+                    <button class="nav-btn" style="right:10px" onclick="changeImg(1); event.stopPropagation();">❯</button>`;
+            } else if (typeof media === 'string' && media.startsWith('fa-')) {
+                mediaBox.innerHTML = `<i class="fa-solid ${media}" style="font-size:8rem; color:var(--neon-blue); opacity:0.3"></i>`;
+            } else {
+                mediaBox.innerHTML = `<img src="${media}" onerror="this.src='https://via.placeholder.com/400?text=Зображення'">`;
+            }
+            document.getElementById("productModal").style.display = "flex";
+            document.body.style.overflow = "hidden";
+        }
+
+        function changeImg(dir) {
+            currentIdx = (currentIdx + dir + currentImages.length) % currentImages.length;
+            document.getElementById("mImg").src = currentImages[currentIdx];
+        }
+
+        function closeModal() { 
+            document.getElementById("productModal").style.display = "none"; 
+            document.body.style.overflow = "auto"; 
+        }
+    </script>
 </body>
-</html>\
+</html>
