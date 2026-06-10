@@ -1,10 +1,299 @@
-<div style="text-align: center; font-family: sans-serif; padding: 50px;">
-    <img src="logo.png" width="100">
-    <h1 style="color: green;">✔ ПІДТВЕРДЖЕНО</h1>
-    <p>Це офіційне цифрове посвідчення <strong>AT Studio 3D</strong>.</p>
-    <hr>
-    <p><strong>Власник:</strong> Арсен Тернопільський</p>
-    <p><strong>Статус:</strong> CEO / Головний розробник</p>
-    <p><strong>ID:</strong> № 001/2026</p>
-    <p style="color: gray; font-size: 12px;">Дана сторінка підтверджує дійсність фізичного документа.</p>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Центр Верифікації | AT Studio.3d</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #00122e;
+            --gold: #D4AF37;
+            --burgundy: #630000;
+            --text-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Exo 2', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Декоративна захисна сітка на фоні сайту */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(212, 175, 55, 0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(212, 175, 55, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 0;
+        }
+
+        .container {
+            background: rgba(0, 18, 46, 0.8);
+            border: 2px solid var(--gold);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: var(--burgundy);
+            border-top-left-radius: 14px;
+            border-top-right-radius: 14px;
+        }
+
+        /* ЕКРАН ЗАВАНТАЖЕННЯ (СКАНЕР) */
+        #loader-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scanner-circle {
+            width: 120px;
+            height: 120px;
+            border: 3px solid rgba(212, 175, 55, 0.2);
+            border-radius: 50%;
+            position: relative;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite linear;
+        }
+
+        .scanner-circle::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border: 3px solid transparent;
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1.5s infinite linear;
+        }
+
+        .status-title {
+            font-size: 20px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .console-log {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 14px;
+            color: var(--gold);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            width: 100%;
+            text-align: left;
+            height: 80px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        /* ЕКРАН РЕЗУЛЬТАТУ */
+        #result-screen {
+            display: none;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .success-icon {
+            font-size: 60px;
+            color: #22c55e;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+        }
+
+        .verified-header {
+            color: #22c55e;
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .verified-desc {
+            font-size: 14px;
+            margin-bottom: 25px;
+            color: #94a3b8;
+        }
+
+        .info-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-size: 14px;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        .value {
+            font-size: 16px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .value.gold-text {
+            color: var(--gold);
+        }
+
+        .btn-home {
+            display: inline-block;
+            background: var(--burgundy);
+            color: #fff;
+            border: 1px solid var(--gold);
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-home:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--gold);
+            transform: translateY(-2px);
+        }
+
+        /* АНІМАЦІЇ */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.2); }
+            70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10deg); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div id="loader-screen">
+        <div class="scanner-circle"></div>
+        <h2 class="status-title">Очікування відповіді</h2>
+        <div class="console-log" id="console">
+            > Ініціалізація запиту...<br>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <div class="success-icon">✔</div>
+        <h2 class="verified-header">Підтверджено</h2>
+        <p class="verified-desc">Цифровий підпис відповідає базі даних ліцензій</p>
+
+        <div class="info-card">
+            <div class="info-row">
+                <span class="label">Власник:</span>
+                <span class="value">Арсен Тернопільський</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Посада:</span>
+                <span class="value gold-text">Засновник / Головний розробник</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Студія:</span>
+                <span class="value">AT Studio.3d</span>
+            </div>
+            <div class="info-row">
+                <span class="label">ID документа:</span>
+                <span class="value gold-text">№ 001 / ТР-2026</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Статус допуску:</span>
+                <span class="value" style="color: #22c55e;">Дійсний (ROOT)</span>
+            </div>
+        </div>
+
+        <a href="https://atstudio3d.pp.ua" class="btn-home">На головну студії</a>
+    </div>
+
 </div>
+
+<script>
+    const consoleElement = document.getElementById('console');
+    const loaderScreen = document.getElementById('loader-screen');
+    const resultScreen = document.getElementById('result-screen');
+
+    // Набір фраз для 15-секундного "сканування"
+    const logs = [
+        { time: 0, text: "> Підключення до захищеного вузла AT Studio.3d..." },
+        { time: 2500, text: "> Зчитування зашифрованого QR-токена..." },
+        { time: 5000, text: "> Перевірка цілісності бази даних [ISO/IEC 7810]..." },
+        { time: 7500, text: "> Дешифрування підпису категорії 'А' (ROOT)..." },
+        { time: 10000, text: "> Збіг знайдено. Перевірка статусу власника..." },
+        { time: 12500, text: "> Синхронізація з сервером авторизації завершена." },
+        { time: 15000, text: "SUCCESS" }
+    ];
+
+    logs.forEach(log => {
+        setTimeout(() => {
+            if (log.text === "SUCCESS") {
+                // Приховуємо завантаження, показуємо картку
+                loaderScreen.style.display = 'none';
+                resultScreen.style.display = 'block';
+            } else {
+                // Додаємо рядок у консоль і прокручуємо вниз
+                consoleElement.innerHTML += log.text + "<br>";
+            }
+        }, log.time);
+    });
+</script>
+
+</body>
+</html>
